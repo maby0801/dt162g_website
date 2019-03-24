@@ -51,7 +51,7 @@ class App extends Component {
       completed: false
     }
 
-    fetch("http://localhost:8080/api/tasks/add", {
+    fetch("https://dt162g-webserver.herokuapp.com/api/tasks/add", {
       method: 'POST',
       body: JSON.stringify(newTodo),
       headers: {
@@ -66,7 +66,7 @@ class App extends Component {
 
   // DELETE: Delete task
   delTodo = (id) => {
-    fetch('http://localhost:8080/api/tasks/delete/' + id, {
+    fetch('https://dt162g-webserver.herokuapp.com/api/tasks/delete/' + id, {
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({id: id})
@@ -83,7 +83,7 @@ class App extends Component {
       if(todo._id === id) {
         todo.completed = !todo.completed
 
-        fetch('http://localhost:8080/api/tasks/update/' + id, {
+        fetch('https://dt162g-webserver.herokuapp.com/api/tasks/update/' + id, {
           method: 'PUT',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
