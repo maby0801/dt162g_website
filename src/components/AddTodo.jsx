@@ -1,3 +1,7 @@
+// Projektarbete
+// DT162G JavaScript-baserad webbutveckling
+// Mattias Bygdeson
+
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
@@ -6,10 +10,13 @@ class AddTodo extends Component {
         title: ""
     }
 
+    // Update state with text body from input field
     onChange = (e) => {
         this.setState({title: e.target.value});
     }
 
+    // Run addTodo function in App.js
+    // Reset state
     onSubmit = (e) => {
         e.preventDefault();
         this.props.addTodo(this.state.title);

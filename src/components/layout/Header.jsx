@@ -1,3 +1,7 @@
+// Projektarbete
+// DT162G JavaScript-baserad webbutveckling
+// Mattias Bygdeson
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 

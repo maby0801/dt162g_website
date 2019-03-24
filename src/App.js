@@ -1,3 +1,7 @@
+// Projektarbete
+// DT162G JavaScript-baserad webbutveckling
+// Mattias Bygdeson
+
 import React, { Component } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
@@ -9,59 +13,91 @@ import uuid from "uuid";
 
 class App extends Component {
   state = {
-    todos: [
-      {
-        id: uuid.v4(),
-        title: "Take out the trash",
-        completed: false
-      },
-      {
-        id: uuid.v4(),
-        title: "Dinner with wife",
-        completed: false
-      },
-      {
-        id: uuid.v4(),
-        title: "Meeting with boss",
-        completed: false
-      }
-    ]
+    todos: []
   };
 
+  // GET: Generate task list
   componentDidMount(){
     console.log("Component App.js mounted");
+
+    this.getTodo();
   }
 
-  // Toggle complete
-  markComplete = (id) => {
-    // Loopar igenom hela state-objektet
-    // Om det finns en todo med det id som finns i argumentet, toggla completed-värdet
-    this.setState({ todos: this.state.todos.map(todo => {
-      if(todo.id === id) {
-        todo.completed = !todo.completed
+  // GET: Fetch from database
+  getTodo(){
+    fetch("http://localhost:8080/api/tasks")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.setState({
+          todos: result
+        });
+      },
+
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
       }
-      return todo;
-    })});
+    )
   }
-
-  // GET: Generate task list
 
   // POST: Add task
   addTodo = (title) => {
     const newTodo = {
-      id: uuid.v4(),
+      _id: uuid.v4(),
       title: title,
       completed: false
     }
+
+    fetch("http://localhost:8080/api/tasks/add", {
+      method: 'POST',
+      body: JSON.stringify(newTodo),
+      headers: {
+          'Content-Type': 'application/json'
+      },
+    })
+    
+    .then(data => console.log(data));
+
     this.setState({todos: [...this.state.todos, newTodo]});
   }
 
   // DELETE: Delete task
   delTodo = (id) => {
-    // Skapar ett nytt todos-objekt, men skriver bara ut todo-föremål som inte har id-numret i argumentet
-    this.setState({ todos: [...this.state.todos.filter(todo => todo.id!== id)]});
+    fetch('http://localhost:8080/api/tasks/delete/' + id, {
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({id: id})
+    })
+    .then(res => res.text())
+    .then(res => alert(res))
+
+    this.setState({ todos: [...this.state.todos.filter(todo => todo._id!== id)]});
   }
 
+  // PUT: Toggle complete
+  markComplete = (id) => {
+    this.setState({ todos: this.state.todos.map(todo => {
+      if(todo._id === id) {
+        todo.completed = !todo.completed
+
+        fetch('http://localhost:8080/api/tasks/update/' + id, {
+          method: 'PUT',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            _id: todo._id,
+            title: todo.title,
+            completed: todo.completed
+          })
+        })
+        .then(res => res.text())
+        .then(res => alert(res))
+      }
+      return todo;
+    })});
+  }
 
   render() {
     return (
