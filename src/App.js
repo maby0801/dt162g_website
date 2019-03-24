@@ -25,7 +25,7 @@ class App extends Component {
 
   // GET: Fetch from database
   getTodo(){
-    fetch("http://localhost:8080/api/tasks")
+    fetch("https://dt162g-webserver.herokuapp.com/api/tasks")
     .then(res => res.json())
     .then(
       (result) => {
